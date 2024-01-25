@@ -11,7 +11,7 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 		const token = tokens[index]!;
 		const [language, isDemo] = token.info.trim().split(/\s+/, 2);
 
-		if (!isDemo) {
+		if (!isDemo || !isDemo.startsWith('demo')) {
 			if (!mdOptions.highlight) {
 				mdOptions = {
 					...mdOptions,

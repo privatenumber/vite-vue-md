@@ -13,8 +13,9 @@ const vueMd = (
 	);
 	let demosByFile: Map<string, Demos>;
 
+	const name = 'vue-md';
 	return {
-		name: 'vue-md',
+		name,
 
 		enforce: 'pre',
 
@@ -87,13 +88,13 @@ const vueMd = (
 
 			const utils = {
 				registerComponent(
-					name: string,
-					source: string,
+					componentName: string,
+					importFrom: string,
 				) {
 					components.push({
 						placeholder: '',
-						name,
-						source,
+						name: componentName,
+						source: importFrom,
 					});
 				},
 				escapeHtml: mdi.utils.escapeHtml,

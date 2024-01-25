@@ -5,11 +5,11 @@ import { buildWithVite } from '../utils/build-with-vite.js';
 import { mount } from '../utils/vue-mount.js';
 
 export default testSuite(({ describe }) => {
-	describe('demo blocks', ({ test }) => {
+	describe('demo blocks', ({ test, describe }) => {
 		test('inline renders', async ({ onTestFinish }) => {
 			const fixture = await createFixture({
 				'doc.md': outdent`
-				\`\`\`vue build
+				\`\`\`vue demo
 				<script setup>
 				const value = 123;
 				</script>
@@ -29,7 +29,7 @@ export default testSuite(({ describe }) => {
 		test('multi file & doesnt mix imports across files', async ({ onTestFinish }) => {
 			const fixture = await createFixture({
 				'docA.md': outdent`
-				\`\`\`vue build
+				\`\`\`vue demo
 				<script setup>
 				import Hello from 'doc:Hello.vue';
 				import { value } from 'doc:values.js';
@@ -39,17 +39,17 @@ export default testSuite(({ describe }) => {
 					<div>Output {{ value }}</div>
 				</template>
 				\`\`\`
-				\`\`\`vue build=Hello.vue
+				\`\`\`vue demo=Hello.vue
 				<template>
 				  <span>Hello A</span>
 				</template>
 				\`\`\`
-				\`\`\`js build=values.js
+				\`\`\`js demo=values.js
 				export const value = 123
 				\`\`\`
 				`,
 				'docB.md': outdent`
-				\`\`\`vue build
+				\`\`\`vue demo
 				<script setup>
 				import Hello from 'doc:Hello.vue';
 				import { value } from 'doc:values.js';
@@ -59,12 +59,12 @@ export default testSuite(({ describe }) => {
 					<div>Output {{ value }}</div>
 				</template>
 				\`\`\`
-				\`\`\`vue build=Hello.vue
+				\`\`\`vue demo=Hello.vue
 				<template>
 				  <span>Hello B</span>
 				</template>
 				\`\`\`
-				\`\`\`js build=values.js
+				\`\`\`js demo=values.js
 				export const value = 321
 				\`\`\`
 				`,
@@ -91,13 +91,13 @@ export default testSuite(({ describe }) => {
 		test('onDemo', async ({ onTestFinish }) => {
 			const fixture = await createFixture({
 				'doc.md': outdent`
-				\`\`\`vue build
+				\`\`\`vue demo
 				<template>
 					<div>Hello</div>
 				</template>
 				\`\`\`
 
-				\`\`\`vue build
+				\`\`\`vue demo
 				<template>
 					<div>Goodbye</div>
 				</template>
@@ -123,6 +123,28 @@ export default testSuite(({ describe }) => {
 
 			const wrapper = mount(components.doc);
 			expect(wrapper.html()).toContain('<div> WRAPPER <div>Hello</div><code><template><template> <div>Hello</div> </template> </template></code></div>');
+		});
+
+		describe('error cases', ({ test }) => {
+			test('ignores non-demo annotations', async ({ onTestFinish }) => {
+				const fixture = await createFixture({
+					'doc.md': outdent`
+					\`\`\`vue RANDOM
+					<script setup>
+					const value = 123;
+					</script>
+					<template>
+					  <div>Output {{ value }}</div>
+					</template>
+					\`\`\`
+					`,
+				});
+				onTestFinish(() => fixture.rm());
+
+				const components = await buildWithVite(fixture.path);
+				const wrapper = mount(components.doc);
+				expect(wrapper.html()).toContain('<code class="language-vue">');
+			});
 		});
 	});
 });
