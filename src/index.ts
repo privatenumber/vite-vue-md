@@ -56,7 +56,11 @@ const vueMd = (
 
 			const demos = demosByFile.get(mdFile!);
 			if (demos) {
-				return demos.get(demoId!);
+				const demo = demos.get(demoId!);
+				if (demo) {
+					return demo;
+				}
+				throw new Error(`[${name}] Demo ${JSON.stringify(`doc:${demoId}`)} not found in ${mdFile}`);
 			}
 		},
 

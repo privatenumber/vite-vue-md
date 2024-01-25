@@ -145,6 +145,23 @@ export default testSuite(({ describe }) => {
 				const wrapper = mount(components.doc);
 				expect(wrapper.html()).toContain('<code class="language-vue">');
 			});
+
+			test('error on missing demo', async ({ onTestFinish }) => {
+				const fixture = await createFixture({
+					'doc.md': outdent`
+					\`\`\`vue demo
+					<script setup>
+					import Missing from 'doc:Missing.vue';
+					</script>
+					<template>
+						<Missing />
+					</template>
+					\`\`\`
+					`,
+				});
+				onTestFinish(() => fixture.rm());
+				expect(() => buildWithVite(fixture.path)).rejects.toThrow('[vue-md] Demo "doc:Missing.vue" not found in ');
+			});
 		});
 	});
 });
