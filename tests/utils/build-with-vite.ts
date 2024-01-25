@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 import './happy-dom.js';
 import { build } from 'vite';
 import vuePlugin from '@vitejs/plugin-vue';
-import vueMd, { type Options } from '#vite-vue-md'; // eslint-disable-line n/no-extraneous-import
+import vueMd, { type Options } from '#vite-vue-md';
 
 export const buildWithVite = async (
 	fixturePath: string,
