@@ -24,7 +24,7 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 			return defaultFence.call(this, tokens, index, mdOptions, env, self);
 		}
 
-		let [, demoName] = isDemo.split('=');
+		let [, demoName] = isDemo.split('=', 2);
 		if (demoName) {
 			if (demos!.has(demoName)) {
 				throw new Error(`[${pluginName}] Demo name ${JSON.stringify(demoName)} is already used in ${filePath}`);
@@ -32,6 +32,10 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 
 			demos!.set(demoName, token.content);
 			return '';
+		}
+
+		if (language !== 'vue') {
+			throw new Error(`[${pluginName}] Entry (unnamed) demo must be a Vue component in ${filePath}`);
 		}
 
 		const demoId = demos!.size + 1;
