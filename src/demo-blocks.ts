@@ -1,8 +1,10 @@
 import markdownIt from 'markdown-it';
-import type { Components, Demos } from './types';
+import type { Components, Demos } from './types.js';
+import { pluginName } from './utils.js';
 
 export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 	md,
+	filePath: string,
 	demos: Demos,
 	components: Components[],
 ) => {
@@ -24,6 +26,10 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 
 		let [, demoName] = isDemo.split('=');
 		if (demoName) {
+			if (demos!.has(demoName)) {
+				throw new Error(`[${pluginName}] Demo name ${JSON.stringify(demoName)} is already used in ${filePath}`);
+			}
+
 			demos!.set(demoName, token.content);
 			return '';
 		}

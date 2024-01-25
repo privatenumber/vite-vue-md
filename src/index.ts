@@ -1,6 +1,8 @@
 import markdownIt from 'markdown-it';
 import { createFilter, type Plugin } from 'vite';
-import { protocol, parseRequest, renderVueComponent } from './utils.js';
+import {
+	pluginName, protocol, parseRequest, renderVueComponent,
+} from './utils.js';
 import type { Components, Demos, Options } from './types.js';
 import { markdownitDemoBlocks } from './demo-blocks.js';
 
@@ -13,9 +15,8 @@ const vueMd = (
 	);
 	let demosByFile: Map<string, Demos>;
 
-	const name = 'vue-md';
 	return {
-		name,
+		name: pluginName,
 
 		enforce: 'pre',
 
@@ -60,7 +61,7 @@ const vueMd = (
 				if (demo) {
 					return demo;
 				}
-				throw new Error(`[${name}] Demo ${JSON.stringify(`doc:${demoId}`)} not found in ${mdFile}`);
+				throw new Error(`[${pluginName}] Demo ${JSON.stringify(`doc:${demoId}`)} not found in ${mdFile}`);
 			}
 		},
 
@@ -86,7 +87,12 @@ const vueMd = (
 			}
 
 			const components: Components[] = [];
-			mdi.use(markdownitDemoBlocks, demos, components);
+			mdi.use(
+				markdownitDemoBlocks,
+				mdFile,
+				demos,
+				components,
+			);
 
 			let markdownHtml = mdi.render(code);
 

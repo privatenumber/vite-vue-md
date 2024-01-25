@@ -1,5 +1,7 @@
 import type { Components, Options } from './types';
 
+export const pluginName = 'vue-md';
+
 export const protocol = 'doc:';
 
 export const parseRequest = (
