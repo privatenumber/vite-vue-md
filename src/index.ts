@@ -86,11 +86,8 @@ const vueMd = (
 			}
 
 			const { mdFile } = parseRequest(requestId);
-			let demos = demosByFile.get(mdFile!);
-			if (!demos) {
-				demos = new Map();
-				demosByFile.set(mdFile!, demos);
-			}
+			const demos = new Map();
+			demosByFile.set(mdFile!, demos);
 
 			const demoImports: DemoImports = [];
 			mdi.use(
