@@ -3,7 +3,13 @@ import { createFilter, type Plugin } from 'vite';
 import {
 	pluginName, protocol, parseRequest, renderVueComponent,
 } from './utils.js';
-import type { Components, Demos, Options } from './types.js';
+import type {
+	ImportComponents,
+	DemoImports,
+	Demos,
+	DemoUtils,
+	Options,
+} from './types.js';
 import { markdownitDemoBlocks } from './demo-blocks.js';
 
 const vueMd = (
@@ -86,54 +92,63 @@ const vueMd = (
 				demosByFile.set(mdFile!, demos);
 			}
 
-			const components: Components[] = [];
+			const demoImports: DemoImports = [];
 			mdi.use(
 				markdownitDemoBlocks,
 				mdFile,
 				demos,
-				components,
+				demoImports,
 			);
 
 			let markdownHtml = mdi.render(code);
 
-			const utils = {
+			const importComponents: ImportComponents = new Map();
+			const utils: DemoUtils = {
 				registerComponent(
-					componentName: string,
-					importFrom: string,
+					componentName,
+					importFrom,
 				) {
-					components.push({
-						placeholder: '',
-						name: componentName,
-						source: importFrom,
-					});
+					let importFromFile = importComponents.get(importFrom);
+					if (!importFromFile) {
+						importFromFile = {
+							named: new Set(),
+						};
+						importComponents.set(importFrom, importFromFile);
+					}
+
+					if (Array.isArray(componentName)) {
+						componentName.forEach(name => importFromFile.named!.add(name));
+					} else {
+						importFromFile.default = componentName;
+					}
 				},
 				escapeHtml: mdi.utils.escapeHtml,
 			};
 
-			const componentsLength = components.length;
-			for (let i = 0; i < componentsLength; i += 1) {
-				const component = components[i]!;
-				let inlineCode = `<${component.name} />`;
+			demoImports.forEach((demo) => {
+				importComponents.set(`${protocol}${mdFile}:${demo.source}`, {
+					default: demo.name,
+				});
 
+				let inlineCode = `<${demo.name} />`;
 				if (options?.onDemo) {
 					inlineCode = options.onDemo.call(
 						utils,
 						inlineCode,
-						demos!.get(component.source)!,
+						demos!.get(demo.source)!,
 						demos!,
 					);
 				}
 
-				component.source = `${protocol}${mdFile}:${component.source}`;
 				markdownHtml = markdownHtml.replace(
-					component.placeholder,
+					demo.placeholder,
 					inlineCode,
 				);
-			}
+			});
 
 			return renderVueComponent(
 				markdownHtml,
-				components,
+				importComponents,
 				options,
 			);
 		},

@@ -1,12 +1,12 @@
 import markdownIt from 'markdown-it';
-import type { Components, Demos } from './types.js';
+import type { DemoImports, Demos } from './types.js';
 import { pluginName } from './utils.js';
 
 export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 	md,
 	filePath: string,
 	demos: Demos,
-	components: Components[],
+	importedDemos: DemoImports,
 ) => {
 	const defaultFence = md.renderer.rules.fence!;
 	md.renderer.rules.fence = function (tokens, index, mdOptions, env, self) {
@@ -47,10 +47,13 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 		// Wait for all demos to be gathered in case the onDemo callback
 		// needs to group them together
 		const placeholder = `\0${Math.random().toString(36)}\0`;
-		components.push({
-			placeholder,
-			name: demoName,
+
+		// Source is not the full internal path because it's used in the
+		// onDemo hook for users
+		importedDemos.push({
 			source,
+			name: demoName,
+			placeholder,
 		});
 		return placeholder;
 	};

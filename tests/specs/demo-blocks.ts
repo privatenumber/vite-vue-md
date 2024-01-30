@@ -111,18 +111,30 @@ export default testSuite(({ describe }) => {
 					</div>
 				</template>
 				`,
+				'multi-components': {
+					'index.js': `
+					export { default as CompA } from './CompA.vue';
+					export { default as CompB } from './CompB.vue';
+					`,
+					'CompA.vue': '<template><div>CompA</div></template>',
+					'CompB.vue': '<template><div>CompB</div></template>',
+				},
 			});
 			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path, {
 				onDemo(componentTag, code) {
+					// Default import
 					this.registerComponent('Wrapper', './Wrapper.vue');
-					return `<Wrapper>${componentTag}<code><template v-pre>${this.escapeHtml(code)}</template></code></Wrapper>`;
+
+					// Can do named imports too
+					this.registerComponent(['CompA', 'CompB'], './multi-components/index.js');
+					return `<Wrapper>${componentTag}<code><template v-pre>${this.escapeHtml(code)}</template></code></Wrapper><CompA /><CompB />`;
 				},
 			});
 
 			const wrapper = mount(components.doc);
-			expect(wrapper.html()).toContain('<div> WRAPPER <div>Hello</div><code><template><template> <div>Hello</div> </template> </template></code></div>');
+			expect(wrapper.html()).toContain('<div> WRAPPER <div>Hello</div><code><template><template> <div>Hello</div> </template> </template></code></div>\n  <div>CompA</div>\n  <div>CompB</div>');
 		});
 
 		describe('error cases', ({ test }) => {

@@ -1,4 +1,4 @@
-import type { Components, Options } from './types';
+import type { ImportComponents, Options } from './types';
 
 export const pluginName = 'vue-md';
 
@@ -29,7 +29,7 @@ export const parseRequest = (
 
 export const renderVueComponent = (
 	markdownHtml: string,
-	components: Components[],
+	components: ImportComponents,
 	{
 		wrapperClass,
 		useVOnce,
@@ -45,17 +45,28 @@ export const renderVueComponent = (
 	</template>
 	`;
 
-	// Uniquify by name
-	components = components.filter((component, index, self) => {
-		const firstIndex = self.findIndex(({ name }) => name === component.name);
-		return firstIndex === index;
-	});
+	if (components.size > 0) {
+		const registerComponents: string[] = [];
+		const importStatements = Array.from(components).map(([source, imports]) => {
+			if (imports.default) {
+				registerComponents.push(imports.default);
+			}
+			if (imports.named) {
+				registerComponents.push(...imports.named);
+			}
 
-	if (components.length > 0) {
+			return `import ${
+				[
+					imports.default,
+					imports.named ? `{${Array.from(imports.named).join(',')}}` : '',
+				].filter(Boolean).join(',')
+			} from ${JSON.stringify(source)};`;
+		}).join('');
+
 		content += `
 		<script>
-		${components.map(({ name, source }) => `import ${name} from ${JSON.stringify(source)}`).join(';')}
-		export default { components: { ${components.map(({ name }) => name).join(',')} } }
+		${importStatements}
+		export default { components: { ${registerComponents.join(',')} } }
 		</script>`;
 	}
 

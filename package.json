@@ -71,7 +71,7 @@
 		"pkgroll": "^2.0.1",
 		"rollup": "^4.9.5",
 		"tsx": "^4.7.0",
-		"typescript": "^5.3.3",
+		"typescript": "5.4.0-beta",
 		"vite": "^5.0.12",
 		"vue": "^3.4.15"
 	},
