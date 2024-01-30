@@ -36,10 +36,20 @@ const vueMd = (
 
 		// Resolve imports from doc demos to the include the actual MD file
 		resolveId(requestId, fromId) {
+			if (!fromId) {
+				return;
+			}
+
+			// Resolve relative paths from the virtual file
 			if (
-				!fromId
-				|| !requestId.startsWith(protocol)
+				fromId.startsWith(protocol)
+				&& requestId[0] === '.'
 			) {
+				const { mdFile } = parseRequest(fromId);
+				return this.resolve(requestId, mdFile);
+			}
+
+			if (!requestId.startsWith(protocol)) {
 				return;
 			}
 
