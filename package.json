@@ -1,81 +1,51 @@
 {
-	"name": "vite-vue-md",
-	"version": "0.0.0",
-	"description": "Vite plugin to import Markdown files as Vue components",
-	"keywords": [
-		"vue",
-		"vue 2",
-		"vue 3",
-		"vite",
-		"plugin",
-		"markdown",
-		"md"
-	],
-	"license": "MIT",
-	"repository": "privatenumber/vite-vue-md",
-	"funding": "https://github.com/privatenumber/vite-vue-md?sponsor=1",
-	"author": {
-		"name": "Hiroki Osame",
-		"email": "hiroki.osame@gmail.com"
-	},
-	"type": "module",
-	"files": [
-		"dist"
-	],
-	"main": "./dist/index.cjs",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.cts",
-	"exports": {
-		"require": {
-			"types": "./dist/index.d.cts",
-			"default": "./dist/index.cjs"
-		},
-		"import": {
-			"types": "./dist/index.d.mts",
-			"default": "./dist/index.mjs"
-		}
-	},
-	"imports": {
-		"#vite-vue-md": {
-			"types": "./src/index.ts",
-			"development": "./src/index.ts",
-			"default": "./dist/index.mjs"
-		}
-	},
-	"scripts": {
-		"build": "pkgroll",
-		"test": "tsx tests",
-		"dev": "tsx watch --conditions=development tests",
-		"type-check": "tsc",
-		"lint": "eslint .",
-		"prepack": "pnpm build && clean-pkg-json"
-	},
-	"peerDependencies": {
-		"vite": "^5.0.0"
-	},
-	"dependencies": {
-		"markdown-it": "^11.0.0"
-	},
-	"devDependencies": {
-		"@happy-dom/global-registrator": "^13.2.0",
-		"@pvtnbr/eslint-config": "^0.38.0",
-		"@types/markdown-it": "^13.0.7",
-		"@vitejs/plugin-vue": "^5.0.3",
-		"@vue/test-utils": "^2.4.3",
-		"clean-pkg-json": "^1.2.0",
-		"eslint": "^8.56.0",
-		"fs-fixture": "^1.2.0",
-		"manten": "^1.2.0",
-		"markdown-it-anchor": "^8.6.7",
-		"outdent": "^0.8.0",
-		"pkgroll": "^2.0.1",
-		"rollup": "^4.9.5",
-		"tsx": "^4.7.0",
-		"typescript": "5.4.0-beta",
-		"vite": "^5.0.12",
-		"vue": "^3.4.15"
-	},
-	"eslintConfig": {
-		"extends": "@pvtnbr/eslint-config/node"
-	}
+  "name": "vite-vue-md",
+  "version": "0.0.0",
+  "description": "Vite plugin to import Markdown files as Vue components",
+  "keywords": [
+    "vue",
+    "vue 2",
+    "vue 3",
+    "vite",
+    "plugin",
+    "markdown",
+    "md"
+  ],
+  "license": "MIT",
+  "repository": "privatenumber/vite-vue-md",
+  "funding": "https://github.com/privatenumber/vite-vue-md?sponsor=1",
+  "author": {
+    "name": "Hiroki Osame",
+    "email": "hiroki.osame@gmail.com"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "imports": {
+    "#vite-vue-md": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "peerDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "markdown-it": "^11.0.0"
+  }
 }
