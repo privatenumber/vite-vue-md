@@ -1,7 +1,11 @@
 import markdownIt from 'markdown-it';
 import { createFilter, type Plugin } from 'vite';
 import {
-	pluginName, protocol, parseRequest, renderVueComponent,
+	pluginName,
+	protocol,
+	parseRequest,
+	renderVueComponent,
+	extractDemoImports,
 } from './utils.js';
 import type {
 	ImportComponents,
@@ -86,7 +90,7 @@ const vueMd = (
 			}
 
 			const { mdFile } = parseRequest(requestId);
-			const demos = new Map();
+			const demos: Demos = new Map();
 			demosByFile.set(mdFile!, demos);
 
 			const demoImports: DemoImports = [];
@@ -129,11 +133,13 @@ const vueMd = (
 
 				let inlineCode = `<${demo.name} />`;
 				if (options?.onDemo) {
+					const demoCode = demos.get(demo.source)!;
+					const relatedDemos = extractDemoImports(demoCode, demos);
 					inlineCode = options.onDemo.call(
 						utils,
 						inlineCode,
-						demos!.get(demo.source)!,
-						demos!,
+						demoCode,
+						relatedDemos,
 					);
 				}
 

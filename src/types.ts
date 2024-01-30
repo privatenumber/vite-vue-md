@@ -33,7 +33,7 @@ export type Options = {
 		this: DemoUtils,
 		tag: string,
 		code: string,
-		demos: Demos,
+		relatedDemos: Demos,
 	) => string;
 
 	wrapperClass?: string;

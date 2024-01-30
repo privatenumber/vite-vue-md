@@ -1,4 +1,4 @@
-import type { ImportComponents, Options } from './types';
+import type { ImportComponents, Options, Demos } from './types';
 
 export const pluginName = 'vue-md';
 
@@ -76,3 +76,16 @@ export const renderVueComponent = (
 
 	return content;
 };
+
+const demoImportPattern = /(["'])doc:(.+)\1/g;
+export const extractDemoImports = (
+	code: string,
+	demos: Demos,
+): Demos => new Map(
+	Array.from(code.matchAll(demoImportPattern))
+		.flatMap((match) => {
+			const demoName = match[2]!;
+			const demoCode = demos.get(demoName)!;
+			return [[demoName, demoCode], ...extractDemoImports(demoCode, demos)];
+		}),
+);
