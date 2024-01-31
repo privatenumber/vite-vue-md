@@ -3,7 +3,7 @@ import { createFixture } from 'fs-fixture';
 import outdent from 'outdent';
 import mdAnchor from 'markdown-it-anchor';
 import { buildWithVite } from '../utils/build-with-vite.js';
-import { mount } from '../utils/vue-mount.js';
+import { mount } from '../utils/vue-test-utils.js';
 
 export default testSuite(({ describe }) => {
 	describe('markdown-it', ({ test }) => {

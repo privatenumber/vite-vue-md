@@ -1,6 +1,9 @@
-import { GlobalRegistrator } from '@happy-dom/global-registrator';
+import { GlobalWindow } from 'happy-dom';
 
-// Since happy dom hijacks console
-export const { console } = globalThis;
-
-GlobalRegistrator.register();
+const window = new GlobalWindow();
+Object.assign(global, {
+	window,
+	document: window.document,
+	SVGElement: window.SVGElement,
+	Element: window.Element,
+});

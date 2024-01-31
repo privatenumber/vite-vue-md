@@ -1,7 +1,6 @@
 import { setTimeout } from 'timers/promises';
 import path from 'path';
 import fs from 'fs/promises';
-import './happy-dom.js';
 import { build } from 'vite';
 import vuePlugin from '@vitejs/plugin-vue';
 import vueMd, { type Options } from '#vite-vue-md';
@@ -23,6 +22,7 @@ export const buildWithVite = async (
 
 		configFile: false,
 		envFile: false,
+		logLevel: 'silent',
 
 		plugins: [
 			vuePlugin({

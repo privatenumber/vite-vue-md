@@ -2,7 +2,7 @@ import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import outdent from 'outdent';
 import { buildWithVite } from '../utils/build-with-vite.js';
-import { mount } from '../utils/vue-mount.js';
+import { mount } from '../utils/vue-test-utils.js';
 
 export default testSuite(({ describe }) => {
 	describe('demo blocks', ({ test, describe }) => {

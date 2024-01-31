@@ -1,8 +1,8 @@
 import { describe, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import outdent from 'outdent';
+import { mount } from './utils/vue-test-utils.js';
 import { buildWithVite } from './utils/build-with-vite.js';
-import { mount } from './utils/vue-mount.js';
 
 describe('vite-vue-md', ({ test, runTestSuite }) => {
 	test('Markdown builds with Vue code', async ({ onTestFinish }) => {

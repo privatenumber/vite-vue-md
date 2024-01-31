@@ -10,9 +10,6 @@ dependencies:
     version: 11.0.1
 
 devDependencies:
-  '@happy-dom/global-registrator':
-    specifier: ^13.2.0
-    version: 13.2.0
   '@pvtnbr/eslint-config':
     specifier: ^0.38.0
     version: 0.38.0(eslint@8.56.0)(typescript@5.4.0-beta)
@@ -34,6 +31,9 @@ devDependencies:
   fs-fixture:
     specifier: ^1.2.0
     version: 1.2.0
+  happy-dom:
+    specifier: ^13.3.8
+    version: 13.3.8
   manten:
     specifier: ^1.2.0
     version: 1.2.0
@@ -553,13 +553,6 @@ packages:
   /@eslint/js@8.56.0:
     resolution: {integrity: sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    dev: true
-
-  /@happy-dom/global-registrator@13.2.0:
-    resolution: {integrity: sha512-hU3aDYGIvwHB0Z/Uhiez6lsCpHHoYfr4asfvVvDqqTwO2cVs9oYF+8xByOmSQqivRcio2G5Gp/J7YChJSfTvNw==}
-    engines: {node: '>=16.0.0'}
-    dependencies:
-      happy-dom: 13.2.0
     dev: true
 
   /@humanwhocodes/config-array@0.11.13:
@@ -2529,8 +2522,8 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
-  /happy-dom@13.2.0:
-    resolution: {integrity: sha512-aeFD9M5d1sN618nOpWy/76IiU5/UJxdYydPdzpXxEn4r7MQByrmtoH1iU9v8v9bJJ0fMte6OAMy6rDD/mGawfg==}
+  /happy-dom@13.3.8:
+    resolution: {integrity: sha512-RAbq4oYfJNkVan1m1F3jfA4YEyRY0/ASoNvZsNJbuX85jIypidmsz9jQZD7Tqz0VXA2MhAGfcsh5oshwmwNYSg==}
     engines: {node: '>=16.0.0'}
     dependencies:
       entities: 4.5.0
