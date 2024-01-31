@@ -1,19 +1,11 @@
-import markdownIt from 'markdown-it';
 import { createFilter, type Plugin } from 'vite';
 import {
 	pluginName,
 	protocol,
 	parseRequest,
-	renderVueComponent,
-	extractDemoImports,
 } from './utils.js';
-import type {
-	ImportComponents,
-	Demos,
-	DemoUtils,
-	Options,
-} from './types.js';
-import { markdownitDemoBlocks } from './demo-blocks.js';
+import type { Options } from './types.js';
+import { mdToFiles } from './md-to-files.js';
 
 const vueMd = (
 	options?: Options,
@@ -22,7 +14,7 @@ const vueMd = (
 		options?.include ?? '**/*.md',
 		options?.exclude,
 	);
-	let compiledFiles: Map<string, string>;
+	let cachedFiles: Map<string, string>;
 
 	return {
 		name: pluginName,
@@ -30,7 +22,7 @@ const vueMd = (
 		enforce: 'pre',
 
 		buildStart() {
-			compiledFiles = new Map();
+			cachedFiles = new Map();
 		},
 
 		// Resolve imports from doc demos to the include the actual MD file
@@ -53,13 +45,13 @@ const vueMd = (
 			}
 
 			// Fully resolved demo path
-			if (compiledFiles.has(requestId)) {
+			if (cachedFiles.has(requestId)) {
 				return requestId;
 			}
 
 			const { demoId } = parseRequest(requestId);
 			const resolvedId = `${protocol}${from.mdFile}:${demoId}`;
-			if (compiledFiles.has(resolvedId)) {
+			if (cachedFiles.has(resolvedId)) {
 				return resolvedId;
 			}
 
@@ -69,91 +61,54 @@ const vueMd = (
 		// Load the demo snippet
 		load(requestId) {
 			if (requestId.startsWith(protocol)) {
-				return compiledFiles.get(requestId);
+				return cachedFiles.get(requestId);
 			}
 		},
 
 		// Transform the Markdown file to Vue
-		transform(code, requestId) {
-			if (
-				requestId.startsWith(protocol)
-				|| !filter(requestId)
-			) {
+		transform(mdCode, mdId) {
+			if (!filter(mdId)) {
+				return;
+			}
+			const files = mdToFiles(mdCode, mdId, options);
+
+			// Update cache
+			files.forEach((code, id) => cachedFiles.set(id, code));
+
+			return files.get(mdId);
+		},
+
+		async handleHotUpdate(context) {
+			if (!filter(context.file)) {
 				return;
 			}
 
-			const mdi = markdownIt(options?.markdownItOptions ?? {});
-			if (options?.markdownItSetup) {
-				options.markdownItSetup(mdi);
-			}
-
-			const { mdFile } = parseRequest(requestId);
-
-			const demos: Demos = new Map();
-			mdi.use(
-				markdownitDemoBlocks,
-				mdFile,
-				demos,
-			);
-
-			let markdownHtml = mdi.render(code);
-
-			const importComponents: ImportComponents = new Map();
-			const utils: DemoUtils = {
-				registerComponent(
-					componentName,
-					importFrom,
-				) {
-					let importFromFile = importComponents.get(importFrom);
-					if (!importFromFile) {
-						importFromFile = {
-							named: new Set(),
-						};
-						importComponents.set(importFrom, importFromFile);
-					}
-
-					if (Array.isArray(componentName)) {
-						componentName.forEach(name => importFromFile.named!.add(name));
-					} else {
-						importFromFile.default = componentName;
-					}
-				},
-				escapeHtml: mdi.utils.escapeHtml,
-			};
-
-			demos.forEach((demo) => {
-				compiledFiles.set(demo.id, demo.code);
-
-				if (!('placeholder' in demo)) {
-					return;
+			const mdCode = await context.read();
+			const files = mdToFiles(mdCode, context.file, options);
+			const changedModules = Array.from(files).map(([id, newCode]) => {
+				const oldCode = cachedFiles.get(id);
+				if (oldCode === newCode) {
+					return undefined;
 				}
 
-				importComponents.set(demo.id, {
-					default: demo.name,
-				});
+				// Update cache
+				cachedFiles.set(id, newCode);
 
-				let inlineCode = `<${demo.name} />`;
-				if (options?.onDemo) {
-					const relatedDemos = extractDemoImports(demo.code, demos);
-					inlineCode = options.onDemo.call(
-						utils,
-						inlineCode,
-						demo.code,
-						relatedDemos,
-					);
+				const module = context.server.moduleGraph.getModuleById(id);
+				if (module) {
+					/**
+					 * Not completely sure why this is necessary, but it seems
+					 * to be the only way to get it to work
+					 *
+					 * Without it, after editing a virtual module, the document
+					 * MD is no longer updatable
+					 */
+					context.server.reloadModule(module);
 				}
-
-				markdownHtml = markdownHtml.replace(
-					demo.placeholder,
-					inlineCode,
-				);
+				return module;
 			});
 
-			return renderVueComponent(
-				markdownHtml,
-				importComponents,
-				options,
-			);
+			return changedModules.filter(Boolean);
 		},
 	};
 };

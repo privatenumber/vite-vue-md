@@ -20,3 +20,23 @@ const now = new Date()
 </template>
 ```
 
+### Demo with multiple dependencies
+```vue demo
+<script setup>
+import Button from 'doc:Button.vue'
+</script>
+
+<template>
+    <Button>
+        Hello world
+    </Button>
+</template>
+```
+
+```vue demo=Button.vue
+<template>
+    <button>
+        <slot />
+    </button>
+</template>
+```
