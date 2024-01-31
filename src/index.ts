@@ -23,7 +23,7 @@ const vueMd = (
 		options?.include ?? '**/*.md',
 		options?.exclude,
 	);
-	let demosByFile: Map<string, Demos>;
+	let compiledFiles: Map<string, string>;
 
 	return {
 		name: pluginName,
@@ -31,7 +31,7 @@ const vueMd = (
 		enforce: 'pre',
 
 		buildStart() {
-			demosByFile = new Map();
+			compiledFiles = new Map();
 		},
 
 		// Resolve imports from doc demos to the include the actual MD file
@@ -39,49 +39,38 @@ const vueMd = (
 			if (!fromId) {
 				return;
 			}
+			const from = parseRequest(fromId);
 
 			// Resolve relative paths from the virtual file
 			if (
-				fromId.startsWith(protocol)
-				&& requestId[0] === '.'
+				requestId[0] === '.'
+				&& fromId.startsWith(protocol)
 			) {
-				const { mdFile } = parseRequest(fromId);
-				return this.resolve(requestId, mdFile);
+				return this.resolve(requestId, from.mdFile);
 			}
 
 			if (!requestId.startsWith(protocol)) {
 				return;
 			}
 
-			const { mdFile, demoId } = parseRequest(requestId);
-			if (mdFile) {
+			// Fully resolved demo path
+			if (compiledFiles.has(requestId)) {
 				return requestId;
 			}
 
-			const from = parseRequest(fromId);
-			if (demosByFile.has(from.mdFile!)) {
-				return `${protocol}${from.mdFile}:${demoId}`;
+			const { demoId } = parseRequest(requestId);
+			const resolvedId = `${protocol}${from.mdFile}:${demoId}`;
+			if (compiledFiles.has(resolvedId)) {
+				return resolvedId;
 			}
+
+			throw new Error(`[${pluginName}] Demo ${JSON.stringify(`doc:${demoId}`)} not found in ${from.mdFile}`);
 		},
 
 		// Load the demo snippet
 		load(requestId) {
-			if (!requestId.startsWith(protocol)) {
-				return;
-			}
-
-			const { mdFile, demoId, query } = parseRequest(requestId);
-			if (query.has('vue')) {
-				return;
-			}
-
-			const demos = demosByFile.get(mdFile!);
-			if (demos) {
-				const demo = demos.get(demoId!);
-				if (demo) {
-					return demo;
-				}
-				throw new Error(`[${pluginName}] Demo ${JSON.stringify(`doc:${demoId}`)} not found in ${mdFile}`);
+			if (requestId.startsWith(protocol)) {
+				return compiledFiles.get(requestId);
 			}
 		},
 
@@ -100,9 +89,8 @@ const vueMd = (
 			}
 
 			const { mdFile } = parseRequest(requestId);
-			const demos: Demos = new Map();
-			demosByFile.set(mdFile!, demos);
 
+			const demos: Demos = new Map();
 			const demoImports: DemoImports = [];
 			mdi.use(
 				markdownitDemoBlocks,
@@ -158,6 +146,10 @@ const vueMd = (
 					inlineCode,
 				);
 			});
+
+			for (const [name, content] of demos) {
+				compiledFiles.set(`${protocol}${mdFile}:${name}`, content);
+			}
 
 			return renderVueComponent(
 				markdownHtml,

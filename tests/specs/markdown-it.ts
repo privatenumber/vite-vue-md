@@ -2,8 +2,8 @@ import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import outdent from 'outdent';
 import mdAnchor from 'markdown-it-anchor';
-import { buildWithVite } from '../utils/build-with-vite.js';
 import { mount } from '../utils/vue-test-utils.js';
+import { buildWithVite } from '../utils/build-with-vite.js';
 
 export default testSuite(({ describe }) => {
 	describe('markdown-it', ({ test }) => {

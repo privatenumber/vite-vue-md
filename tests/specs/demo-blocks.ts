@@ -1,8 +1,8 @@
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import outdent from 'outdent';
-import { buildWithVite } from '../utils/build-with-vite.js';
 import { mount } from '../utils/vue-test-utils.js';
+import { buildWithVite } from '../utils/build-with-vite.js';
 
 export default testSuite(({ describe }) => {
 	describe('demo blocks', ({ test, describe }) => {
@@ -84,6 +84,31 @@ export default testSuite(({ describe }) => {
 			expect(wrapperB.html()).toBe(outdent`
 			<div class="markdown-body"><span>Hello B</span>
 			  <div>Output 321</div>
+			</div>
+			`);
+		});
+
+		test('resolves relative files', async ({ onTestFinish }) => {
+			const fixture = await createFixture({
+				'doc.md': outdent`
+				\`\`\`vue demo
+				<script setup>
+				import { value } from './value.js';
+				</script>
+				<template>
+					<div>Output {{ value }}</div>
+				</template>
+				\`\`\`
+				`,
+				'value.js': 'export const value = 123',
+			});
+			onTestFinish(() => fixture.rm());
+
+			const components = await buildWithVite(fixture.path);
+			const wrapper = mount(components.doc);
+			expect(wrapper.html()).toBe(outdent`
+			<div class="markdown-body">
+			  <div>Output 123</div>
 			</div>
 			`);
 		});

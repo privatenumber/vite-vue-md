@@ -1,3 +1,4 @@
+import './happy-dom.js';
 import { setTimeout } from 'timers/promises';
 import path from 'path';
 import fs from 'fs/promises';
