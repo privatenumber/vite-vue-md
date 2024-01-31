@@ -30,6 +30,7 @@ const vueMd = (
 			if (!fromId) {
 				return;
 			}
+
 			const from = parseRequest(fromId);
 
 			// Resolve relative paths from the virtual file
@@ -49,7 +50,13 @@ const vueMd = (
 				return requestId;
 			}
 
-			const { demoId } = parseRequest(requestId);
+			const { demoId, query } = parseRequest(requestId);
+
+			// Internal Vue path like script
+			if (query.has('vue')) {
+				return requestId;
+			}
+
 			const resolvedId = `${protocol}${from.mdFile}:${demoId}`;
 			if (cachedFiles.has(resolvedId)) {
 				return resolvedId;

@@ -3,6 +3,7 @@ import { setTimeout } from 'timers/promises';
 import path from 'path';
 import fs from 'fs/promises';
 import { build } from 'vite';
+import type { DefineComponent } from 'vue';
 import vuePlugin from '@vitejs/plugin-vue';
 import vueMd, { type Options } from '#vite-vue-md';
 
@@ -50,7 +51,7 @@ export const buildWithVite = async (
 	await setTimeout(10);
 
 	const componentsEntries = await Promise.all(
-		files.map(async (file) => {
+		files.map(async (file): Promise<[string, DefineComponent]> => {
 			const name = file.slice(0, -3);
 			const filePath = path.join(fixturePath, 'dist', `${name}.mjs`);
 			const module = await import(filePath);

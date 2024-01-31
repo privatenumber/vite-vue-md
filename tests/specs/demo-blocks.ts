@@ -113,6 +113,38 @@ export default testSuite(({ describe }) => {
 			`);
 		});
 
+		test('loads styles', async ({ onTestFinish }) => {
+			const fixture = await createFixture({
+				'doc.md': outdent`
+				\`\`\`vue demo
+				<script setup>
+				import { value } from './value.js';
+				</script>
+
+				<template>
+					<div>Output {{ value }}</div>
+				</template>
+
+				<style scoped>
+				div {
+					color: red;
+				}
+				</style>
+				\`\`\`
+				`,
+				'value.js': 'export const value = 123',
+			});
+			onTestFinish(() => fixture.rm());
+
+			const components = await buildWithVite(fixture.path);
+			const styles = await fixture.readFile('dist/style.css', 'utf8');
+			const { Demo1 } = components.doc!.components!;
+			expect(styles).toContain(`div[${
+				// @ts-expect-error internal property
+				Demo1!.__scopeId
+			}]`);
+		});
+
 		test('onDemo', async ({ onTestFinish }) => {
 			const fixture = await createFixture({
 				'doc.md': outdent`
