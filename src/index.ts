@@ -9,7 +9,6 @@ import {
 } from './utils.js';
 import type {
 	ImportComponents,
-	DemoImports,
 	Demos,
 	DemoUtils,
 	Options,
@@ -91,12 +90,10 @@ const vueMd = (
 			const { mdFile } = parseRequest(requestId);
 
 			const demos: Demos = new Map();
-			const demoImports: DemoImports = [];
 			mdi.use(
 				markdownitDemoBlocks,
 				mdFile,
 				demos,
-				demoImports,
 			);
 
 			let markdownHtml = mdi.render(code);
@@ -124,19 +121,24 @@ const vueMd = (
 				escapeHtml: mdi.utils.escapeHtml,
 			};
 
-			demoImports.forEach((demo) => {
-				importComponents.set(`${protocol}${mdFile}:${demo.source}`, {
+			demos.forEach((demo) => {
+				compiledFiles.set(demo.id, demo.code);
+
+				if (!('placeholder' in demo)) {
+					return;
+				}
+
+				importComponents.set(demo.id, {
 					default: demo.name,
 				});
 
 				let inlineCode = `<${demo.name} />`;
 				if (options?.onDemo) {
-					const demoCode = demos.get(demo.source)!;
-					const relatedDemos = extractDemoImports(demoCode, demos);
+					const relatedDemos = extractDemoImports(demo.code, demos);
 					inlineCode = options.onDemo.call(
 						utils,
 						inlineCode,
-						demoCode,
+						demo.code,
 						relatedDemos,
 					);
 				}
@@ -146,10 +148,6 @@ const vueMd = (
 					inlineCode,
 				);
 			});
-
-			for (const [name, content] of demos) {
-				compiledFiles.set(`${protocol}${mdFile}:${name}`, content);
-			}
 
 			return renderVueComponent(
 				markdownHtml,

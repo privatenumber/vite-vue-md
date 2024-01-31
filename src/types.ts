@@ -6,13 +6,17 @@ export type ImportComponents = Map<string, {
 	named?: Set<string>;
 }>;
 
-export type DemoImports = {
-	source: string;
-	placeholder: string;
-	name: string;
-}[];
+type DemoNamed = {
+	id: string;
+	code: string;
+};
 
-export type Demos = Map<string, string>;
+type DemoEntry = DemoNamed & {
+	name: string;
+	placeholder: string;
+};
+
+export type Demos = Map<string, DemoNamed | DemoEntry>;
 
 export type DemoUtils = {
 	registerComponent: (

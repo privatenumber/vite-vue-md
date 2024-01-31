@@ -86,6 +86,9 @@ export const extractDemoImports = (
 		.flatMap((match) => {
 			const demoName = match[2]!;
 			const demoCode = demos.get(demoName)!;
-			return [[demoName, demoCode], ...extractDemoImports(demoCode, demos)];
+			return [
+				[demoName, demoCode],
+				...extractDemoImports(demoCode.code, demos),
+			];
 		}),
 );

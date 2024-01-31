@@ -1,12 +1,11 @@
 import markdownIt from 'markdown-it';
-import type { DemoImports, Demos } from './types.js';
-import { pluginName } from './utils.js';
+import type { Demos } from './types.js';
+import { protocol, pluginName } from './utils.js';
 
 export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 	md,
 	filePath: string,
 	demos: Demos,
-	importedDemos: DemoImports,
 ) => {
 	const defaultFence = md.renderer.rules.fence!;
 	md.renderer.rules.fence = function (tokens, index, mdOptions, env, self) {
@@ -25,7 +24,10 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 				throw new Error(`[${pluginName}] Demo name ${JSON.stringify(demoName)} is already used in ${filePath}`);
 			}
 
-			demos!.set(demoName, token.content);
+			demos!.set(demoName, {
+				id: `${protocol}${filePath}:${demoName}`,
+				code: token.content,
+			});
 			return '';
 		}
 
@@ -36,20 +38,21 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 		const demoId = demos!.size + 1;
 		demoName = `Demo${demoId}`;
 
-		const source = `${demoName}.${language}`;
-		demos!.set(source, token.content);
+		const fileName = `${demoName}.${language}`;
 
 		// Wait for all demos to be gathered in case the onDemo callback
 		// needs to group them together
 		const placeholder = `\0${Math.random().toString(36)}\0`;
 
-		// Source is not the full internal path because it's used in the
+		// Filename is not the full internal path because it's used in the
 		// onDemo hook for users
-		importedDemos.push({
-			source,
+		demos.set(fileName, {
+			id: `${protocol}${filePath}:${fileName}`,
 			name: demoName,
 			placeholder,
+			code: token.content,
 		});
+
 		return placeholder;
 	};
 };
