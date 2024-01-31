@@ -20,7 +20,7 @@ const vueMd = (
 	options?: Options,
 ): Plugin => {
 	const filter = createFilter(
-		options?.include ?? /\.md$/,
+		options?.include ?? '**/*.md',
 		options?.exclude,
 	);
 	let demosByFile: Map<string, Demos>;

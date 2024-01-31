@@ -14,14 +14,9 @@ export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
 		const [language, isDemo] = token.info.trim().split(/\s+/, 2);
 
 		if (!isDemo || !isDemo.startsWith('demo')) {
-			if (!mdOptions.highlight) {
-				mdOptions = {
-					...mdOptions,
-					highlight: content => `<template v-pre>${md.utils.escapeHtml(content)}</template>`,
-				};
-			}
-
-			return defaultFence.call(this, tokens, index, mdOptions, env, self);
+			let code = defaultFence.call(this, tokens, index, mdOptions, env, self);
+			code = code.replaceAll('<pre', '<pre v-pre');
+			return code;
 		}
 
 		let [, demoName] = isDemo.split('=', 2);
