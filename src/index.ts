@@ -21,7 +21,7 @@ const vueMd = (
 
 		enforce: 'pre',
 
-		buildStart() {
+		buildStart: () => {
 			cachedFiles = new Map();
 		},
 
@@ -66,14 +66,14 @@ const vueMd = (
 		},
 
 		// Load the demo snippet
-		load(requestId) {
+		load: (requestId) => {
 			if (requestId.startsWith(protocol)) {
 				return cachedFiles.get(requestId);
 			}
 		},
 
 		// Transform the Markdown file to Vue
-		transform(mdCode, mdId) {
+		transform: (mdCode, mdId) => {
 			if (!filter(mdId)) {
 				return;
 			}
@@ -85,7 +85,7 @@ const vueMd = (
 			return files.get(mdId);
 		},
 
-		async handleHotUpdate(context) {
+		handleHotUpdate: async (context) => {
 			if (!filter(context.file)) {
 				return;
 			}

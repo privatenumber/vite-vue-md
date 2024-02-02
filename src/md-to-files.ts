@@ -35,10 +35,10 @@ export const mdToFiles = (
 
 	const importComponents: ImportComponents = new Map();
 	const utils: DemoUtils = {
-		registerComponent(
+		registerComponent: (
 			componentName,
 			importFrom,
-		) {
+		) => {
 			let importFromFile = importComponents.get(importFrom);
 			if (!importFromFile) {
 				importFromFile = {

@@ -33,7 +33,7 @@ export default testSuite(({ describe }) => {
 			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path, {
-				markdownItSetup(md) {
+				markdownItSetup: (md) => {
 					md.use(mdAnchor);
 				},
 			});
