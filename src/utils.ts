@@ -4,6 +4,13 @@ export const pluginName = 'vue-md';
 
 export const protocol = 'doc:';
 
+/**
+ * Parse a request ID into its components, handles various formats:
+ * - 'doc:Hello.vue' -> { mdFile: undefined, demoId: 'Hello.vue' }
+ * - 'doc:C:/path/file.md:Demo' -> { mdFile: 'C:/path/file.md', demoId: 'Demo' }
+ * - 'doc:file://C:/path/file.md:Demo' -> { mdFile: 'file://C:/path/file.md', demoId: 'Demo' }
+ * - 'C:/path/file.md' -> { mdFile: 'C:/path/file.md', demoId: undefined }
+ */
 export const parseRequest = (
 	requestId: string,
 ) => {
@@ -13,10 +20,25 @@ export const parseRequest = (
 	let demoId: string | undefined;
 
 	if (requestSpecifier?.startsWith(protocol)) {
-		[mdFile, demoId] = requestSpecifier.slice(protocol.length).split(':', 2);
-		if (!demoId) {
-			demoId = mdFile;
+		// Remove protocol prefix
+		const withoutPrefix = requestSpecifier.slice(protocol.length);
+
+		// Find the last colon to split mdFile and demoId
+		// This correctly handles Windows paths like C:/path/to/file:demo
+		const lastColonIndex = withoutPrefix.lastIndexOf(':');
+
+		if (lastColonIndex === -1) {
+			// No colon means just a demoId
+			demoId = withoutPrefix;
 			mdFile = undefined;
+		} else {
+			mdFile = withoutPrefix.slice(0, lastColonIndex);
+			demoId = withoutPrefix.slice(lastColonIndex + 1);
+
+			if (!demoId) {
+				demoId = mdFile;
+				mdFile = undefined;
+			}
 		}
 	}
 
