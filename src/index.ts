@@ -92,10 +92,10 @@ const vueMd = (
 
 			const mdCode = await context.read();
 			const files = mdToFiles(mdCode, context.file, options);
-			const changedModules = Array.from(files).map(([id, newCode]) => {
+			const changedModules = Array.from(files).flatMap(([id, newCode]) => {
 				const oldCode = cachedFiles.get(id);
 				if (oldCode === newCode) {
-					return undefined;
+					return [];
 				}
 
 				// Update cache
@@ -111,11 +111,12 @@ const vueMd = (
 					 * MD is no longer updatable
 					 */
 					context.server.reloadModule(module);
+					return [module];
 				}
-				return module;
+				return [];
 			});
 
-			return changedModules.filter(Boolean);
+			return changedModules;
 		},
 	};
 };

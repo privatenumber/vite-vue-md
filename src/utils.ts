@@ -67,12 +67,14 @@ export const renderVueComponent = (
 				registerComponents.push(...imports.named);
 			}
 
-			return `import ${
-				[
-					imports.default,
-					imports.named ? `{${Array.from(imports.named).join(',')}}` : '',
-				].filter(Boolean).join(',')
-			} from ${JSON.stringify(source)};`;
+			const importParts: string[] = [];
+			if (imports.default) {
+				importParts.push(imports.default);
+			}
+			if (imports.named) {
+				importParts.push(`{${Array.from(imports.named).join(',')}}`);
+			}
+			return `import ${importParts.join(',')} from ${JSON.stringify(source)};`;
 		}).join('');
 
 		content += `
