@@ -43,7 +43,7 @@ export const markdownitDemoBlocks: PluginWithParams = (
 
 		// Wait for all demos to be gathered in case the onDemo callback
 		// needs to group them together
-		const placeholder = `\0${Math.random().toString(36)}\0`;
+		const placeholder = `\0demo:${demoName}\0`;
 
 		// Filename is not the full internal path because it's used in the
 		// onDemo hook for users
