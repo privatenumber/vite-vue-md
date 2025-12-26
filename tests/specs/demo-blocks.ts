@@ -189,6 +189,20 @@ export default testSuite(({ describe }) => {
 			expect(wrapper.html()).toContain('<div> WRAPPER <div>Hello</div><code><template>&lt;template&gt; &lt;div&gt;Hello&lt;/div&gt; &lt;/template&gt; </template></code></div>\n  <div>CompA</div>\n  <div>CompB</div>');
 		});
 
+		test('v-pre preserves Vue syntax in non-demo code blocks', async () => {
+			await using fixture = await createFixture({
+				'doc.md': outdent`
+				\`\`\`js
+				const x = {{ value }};
+				\`\`\`
+				`,
+			});
+
+			const components = await buildWithVite(fixture.path);
+			const wrapper = mount(components.doc);
+			expect(wrapper.html()).toContain('{{ value }}');
+		});
+
 		describe('error cases', ({ test }) => {
 			test('ignores non-demo annotations', async () => {
 				await using fixture = await createFixture({
