@@ -6,8 +6,8 @@ import { buildWithVite } from '../utils/build-with-vite.js';
 
 export default testSuite(({ describe }) => {
 	describe('demo blocks', ({ test, describe }) => {
-		test('inline renders', async ({ onTestFinish }) => {
-			const fixture = await createFixture({
+		test('inline renders', async () => {
+			await using fixture = await createFixture({
 				'doc.md': outdent`
 				\`\`\`vue demo
 				<script setup>
@@ -19,15 +19,14 @@ export default testSuite(({ describe }) => {
 				\`\`\`
 				`,
 			});
-			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path);
 			const wrapper = mount(components.doc);
 			expect(wrapper.html()).toContain('<div>Output 123</div>');
 		});
 
-		test('multi file & doesnt mix imports across files', async ({ onTestFinish }) => {
-			const fixture = await createFixture({
+		test('multi file & doesnt mix imports across files', async () => {
+			await using fixture = await createFixture({
 				'docA.md': outdent`
 				\`\`\`vue demo
 				<script setup>
@@ -69,7 +68,6 @@ export default testSuite(({ describe }) => {
 				\`\`\`
 				`,
 			});
-			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path);
 
@@ -88,8 +86,8 @@ export default testSuite(({ describe }) => {
 			`);
 		});
 
-		test('resolves relative files', async ({ onTestFinish }) => {
-			const fixture = await createFixture({
+		test('resolves relative files', async () => {
+			await using fixture = await createFixture({
 				'doc.md': outdent`
 				\`\`\`vue demo
 				<script setup>
@@ -102,7 +100,6 @@ export default testSuite(({ describe }) => {
 				`,
 				'value.js': 'export const value = 123',
 			});
-			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path);
 			const wrapper = mount(components.doc);
@@ -113,8 +110,8 @@ export default testSuite(({ describe }) => {
 			`);
 		});
 
-		test('loads styles', async ({ onTestFinish }) => {
-			const fixture = await createFixture({
+		test('loads styles', async () => {
+			await using fixture = await createFixture({
 				'doc.md': outdent`
 				\`\`\`vue demo
 				<script setup>
@@ -134,7 +131,6 @@ export default testSuite(({ describe }) => {
 				`,
 				'value.js': 'export const value = 123',
 			});
-			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path);
 			const styles = await fixture.readFile('dist/style.css', 'utf8');
@@ -145,8 +141,8 @@ export default testSuite(({ describe }) => {
 			}]`);
 		});
 
-		test('onDemo', async ({ onTestFinish }) => {
-			const fixture = await createFixture({
+		test('onDemo', async () => {
+			await using fixture = await createFixture({
 				'doc.md': outdent`
 				\`\`\`vue demo
 				<template>
@@ -177,7 +173,6 @@ export default testSuite(({ describe }) => {
 					'CompB.vue': '<template><div>CompB</div></template>',
 				},
 			});
-			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path, {
 				onDemo(componentTag, code) {
@@ -195,8 +190,8 @@ export default testSuite(({ describe }) => {
 		});
 
 		describe('error cases', ({ test }) => {
-			test('ignores non-demo annotations', async ({ onTestFinish }) => {
-				const fixture = await createFixture({
+			test('ignores non-demo annotations', async () => {
+				await using fixture = await createFixture({
 					'doc.md': outdent`
 					\`\`\`vue RANDOM
 					<script setup>
@@ -208,15 +203,14 @@ export default testSuite(({ describe }) => {
 					\`\`\`
 					`,
 				});
-				onTestFinish(() => fixture.rm());
 
 				const components = await buildWithVite(fixture.path);
 				const wrapper = mount(components.doc);
 				expect(wrapper.html()).toContain('<code class="language-vue">');
 			});
 
-			test('error on missing demo', async ({ onTestFinish }) => {
-				const fixture = await createFixture({
+			test('error on missing demo', async () => {
+				await using fixture = await createFixture({
 					'doc.md': outdent`
 					\`\`\`vue demo
 					<script setup>
@@ -228,12 +222,11 @@ export default testSuite(({ describe }) => {
 					\`\`\`
 					`,
 				});
-				onTestFinish(() => fixture.rm());
 				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Demo "doc:Missing.vue" not found in .*[/\\]doc\.md/ });
 			});
 
-			test('error on duplicate demo', async ({ onTestFinish }) => {
-				const fixture = await createFixture({
+			test('error on duplicate demo', async () => {
+				await using fixture = await createFixture({
 					'doc.md': outdent`
 					\`\`\`vue demo=a.js
 					console.log(1)
@@ -244,19 +237,17 @@ export default testSuite(({ describe }) => {
 					\`\`\`
 					`,
 				});
-				onTestFinish(() => fixture.rm());
 				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Demo name "a.js" is already used in .*[/\\]doc\.md/ });
 			});
 
-			test('error on non-vue demo entry', async ({ onTestFinish }) => {
-				const fixture = await createFixture({
+			test('error on non-vue demo entry', async () => {
+				await using fixture = await createFixture({
 					'doc.md': outdent`
 					\`\`\`js demo
 					console.log(1)
 					\`\`\`
 					`,
 				});
-				onTestFinish(() => fixture.rm());
 				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Entry \(unnamed\) demo must be a Vue component in .*[/\\]doc\.md/ });
 			});
 		});
