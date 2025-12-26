@@ -20,7 +20,7 @@ export const parseRequest = (
 
 	if (requestSpecifier?.startsWith(protocol)) {
 		const withoutPrefix = requestSpecifier.slice(protocol.length);
-		const searchStart = /^[A-Za-z]:/.test(withoutPrefix) ? 2 : 0;
+		const searchStart = /^[A-Z]:/i.test(withoutPrefix) ? 2 : 0;
 		const colonIndex = withoutPrefix.indexOf(':', searchStart);
 
 		if (colonIndex === -1) {
