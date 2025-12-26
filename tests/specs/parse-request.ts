@@ -22,8 +22,8 @@ export default testSuite(({ describe }) => {
 		});
 
 		test('Windows path with backslashes', () => {
-			const result = parseRequest('doc:C:\\path\\to\\file.md:Demo');
-			expect(result.mdFile).toBe('C:\\path\\to\\file.md');
+			const result = parseRequest(String.raw`doc:C:\path\to\file.md:Demo`);
+			expect(result.mdFile).toBe(String.raw`C:\path\to\file.md`);
 			expect(result.demoId).toBe('Demo');
 		});
 
