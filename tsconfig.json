@@ -1,7 +1,10 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"lib": ["ESNext", "DOM"],
+		"lib": [
+			"ESNext",
+			"DOM",
+		],
 		"module": "ESNext",
 		"moduleResolution": "Bundler",
 		"strict": true,
@@ -9,6 +12,6 @@
 		"noEmit": true,
 		"esModuleInterop": true,
 		"isolatedModules": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
 	},
 }

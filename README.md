@@ -96,7 +96,7 @@ import { clickHandler } from 'doc:click-handler.js'
 
 Second file:
 ```js demo=click-handler.js
-export const clickHandler = () => alert('Clicked!');
+export const clickHandler = () => alert('Clicked!')
 ```
 ````
 

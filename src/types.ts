@@ -1,5 +1,5 @@
 import type { FilterPattern } from 'vite';
-import markdownIt from 'markdown-it';
+import type markdownIt from 'markdown-it';
 
 export type ImportComponents = Map<string, {
 	default?: string;

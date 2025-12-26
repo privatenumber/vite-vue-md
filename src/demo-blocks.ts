@@ -1,4 +1,4 @@
-import markdownIt from 'markdown-it';
+import type markdownIt from 'markdown-it';
 import type { Demos } from './types.js';
 import { protocol, pluginName } from './utils.js';
 

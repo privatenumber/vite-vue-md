@@ -5,16 +5,16 @@ import { mount } from './utils/vue-test-utils.js';
 import { buildWithVite } from './utils/build-with-vite.js';
 
 describe('vite-vue-md', ({ test, runTestSuite }) => {
-	test('Markdown builds with Vue code', async ({ onTestFinish }) => {
-		const fixture = await createFixture({
-			'doc.md': outdent`		
+	test('Markdown builds with Vue code', async () => {
+		await using fixture = await createFixture({
+			'doc.md': outdent`
 			No language
 			\`\`\`
 			<template>
 			  <div>No language {{ value }}</div>
 			</template>
 			\`\`\`
-	
+
 			Vue language
 			\`\`\`vue
 			<template>
@@ -23,19 +23,17 @@ describe('vite-vue-md', ({ test, runTestSuite }) => {
 			\`\`\`
 			`,
 		});
-		onTestFinish(() => fixture.rm());
 
 		const components = await buildWithVite(fixture.path);
 		const wrapper = mount(components.doc);
-		expect(wrapper.html()).toContain('<div>No language {{ value }}</div>');
-		expect(wrapper.html()).toContain('<div>Language {{ value }}</div>');
+		expect(wrapper.html()).toContain('&lt;div&gt;No language {{ value }}&lt;/div&gt;');
+		expect(wrapper.html()).toContain('&lt;div&gt;Language {{ value }}&lt;/div&gt;');
 	});
 
-	test('wrapperClass', async ({ onTestFinish }) => {
-		const fixture = await createFixture({
+	test('wrapperClass', async () => {
+		await using fixture = await createFixture({
 			'doc.md': '# Hello World',
 		});
-		onTestFinish(() => fixture.rm());
 
 		const components = await buildWithVite(fixture.path, {
 			wrapperClass: 'test',
@@ -48,8 +46,8 @@ describe('vite-vue-md', ({ test, runTestSuite }) => {
 		`);
 	});
 
-	test('markdownCss', async ({ onTestFinish }) => {
-		const fixture = await createFixture({
+	test('markdownCss', async () => {
+		await using fixture = await createFixture({
 			'doc.md': '# Hello World',
 			'markdown.css': `
 			.markdown-body {
@@ -57,7 +55,6 @@ describe('vite-vue-md', ({ test, runTestSuite }) => {
 			}
 			`,
 		});
-		onTestFinish(() => fixture.rm());
 
 		const components = await buildWithVite(fixture.path, {
 			markdownCss: '/markdown.css',

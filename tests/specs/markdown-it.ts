@@ -7,15 +7,14 @@ import { buildWithVite } from '../utils/build-with-vite.js';
 
 export default testSuite(({ describe }) => {
 	describe('markdown-it', ({ test }) => {
-		test('options', async ({ onTestFinish }) => {
-			const fixture = await createFixture({
+		test('options', async () => {
+			await using fixture = await createFixture({
 				'doc.md': outdent`
 				\`\`\`vue
 				a
 				\`\`\`
 				`,
 			});
-			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path, {
 				markdownItOptions: {
@@ -26,11 +25,10 @@ export default testSuite(({ describe }) => {
 			expect(wrapper.html()).toContain('<code class="asdf-vue">');
 		});
 
-		test('setup', async ({ onTestFinish }) => {
-			const fixture = await createFixture({
+		test('setup', async () => {
+			await using fixture = await createFixture({
 				'doc.md': '# Hello World',
 			});
-			onTestFinish(() => fixture.rm());
 
 			const components = await buildWithVite(fixture.path, {
 				markdownItSetup: (md) => {
