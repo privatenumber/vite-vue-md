@@ -5,10 +5,9 @@ export const pluginName = 'vue-md';
 export const protocol = 'doc:';
 
 /**
- * Parse a request ID into its components, handles various formats:
+ * Parse request ID - skips Windows drive letter colon (C:/) when finding delimiter
  * - 'doc:Hello.vue' -> { mdFile: undefined, demoId: 'Hello.vue' }
  * - 'doc:C:/path/file.md:Demo' -> { mdFile: 'C:/path/file.md', demoId: 'Demo' }
- * - 'doc:file://C:/path/file.md:Demo' -> { mdFile: 'file://C:/path/file.md', demoId: 'Demo' }
  * - 'C:/path/file.md' -> { mdFile: 'C:/path/file.md', demoId: undefined }
  */
 export const parseRequest = (
@@ -20,25 +19,16 @@ export const parseRequest = (
 	let demoId: string | undefined;
 
 	if (requestSpecifier?.startsWith(protocol)) {
-		// Remove protocol prefix
 		const withoutPrefix = requestSpecifier.slice(protocol.length);
+		const searchStart = /^[A-Za-z]:/.test(withoutPrefix) ? 2 : 0;
+		const colonIndex = withoutPrefix.indexOf(':', searchStart);
 
-		// Find the last colon to split mdFile and demoId
-		// This correctly handles Windows paths like C:/path/to/file:demo
-		const lastColonIndex = withoutPrefix.lastIndexOf(':');
-
-		if (lastColonIndex === -1) {
-			// No colon means just a demoId
+		if (colonIndex === -1) {
 			demoId = withoutPrefix;
 			mdFile = undefined;
 		} else {
-			mdFile = withoutPrefix.slice(0, lastColonIndex);
-			demoId = withoutPrefix.slice(lastColonIndex + 1);
-
-			if (!demoId) {
-				demoId = mdFile;
-				mdFile = undefined;
-			}
+			mdFile = withoutPrefix.slice(0, colonIndex);
+			demoId = withoutPrefix.slice(colonIndex + 1);
 		}
 	}
 

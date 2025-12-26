@@ -229,7 +229,7 @@ export default testSuite(({ describe }) => {
 					`,
 				});
 				onTestFinish(() => fixture.rm());
-				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Demo "doc:Missing.vue" not found in .*\/doc\.md/ });
+				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Demo "doc:Missing.vue" not found in .*[/\\]doc\.md/ });
 			});
 
 			test('error on duplicate demo', async ({ onTestFinish }) => {
@@ -245,7 +245,7 @@ export default testSuite(({ describe }) => {
 					`,
 				});
 				onTestFinish(() => fixture.rm());
-				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Demo name "a.js" is already used in .*\/doc\.md/ });
+				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Demo name "a.js" is already used in .*[/\\]doc\.md/ });
 			});
 
 			test('error on non-vue demo entry', async ({ onTestFinish }) => {
@@ -257,7 +257,7 @@ export default testSuite(({ describe }) => {
 					`,
 				});
 				onTestFinish(() => fixture.rm());
-				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Entry \(unnamed\) demo must be a Vue component in .*\/doc\.md/ });
+				expect(() => buildWithVite(fixture.path)).rejects.toMatchObject({ message: /\[vue-md\] Entry \(unnamed\) demo must be a Vue component in .*[/\\]doc\.md/ });
 			});
 		});
 	});
