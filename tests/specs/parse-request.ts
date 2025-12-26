@@ -44,5 +44,12 @@ export default testSuite(({ describe }) => {
 			expect(result.demoId).toBe('Demo.vue');
 			expect(result.query.has('raw')).toBe(true);
 		});
+
+		test('Windows path with backslashes and query string', () => {
+			const result = parseRequest(String.raw`doc:C:\path\to\file.md:Demo?raw`);
+			expect(result.mdFile).toBe(String.raw`C:\path\to\file.md`);
+			expect(result.demoId).toBe('Demo');
+			expect(result.query.has('raw')).toBe(true);
+		});
 	});
 });
