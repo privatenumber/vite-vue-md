@@ -70,7 +70,7 @@ export const mdToFiles = (
 
 		let inlineCode = `<${demo.name} />`;
 		if (options?.onDemo) {
-			const relatedDemos = extractDemoImports(demo.code, demos);
+			const relatedDemos = extractDemoImports(demo.code, demos, mdFile ?? requestId);
 			inlineCode = options.onDemo.call(
 				utils,
 				inlineCode,

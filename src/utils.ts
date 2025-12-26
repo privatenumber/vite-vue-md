@@ -93,14 +93,21 @@ const demoImportPattern = /(["'])doc:(.+)\1/g;
 export const extractDemoImports = (
 	code: string,
 	demos: Demos,
+	filePath: string,
 ): Demos => new Map(
 	Array.from(code.matchAll(demoImportPattern))
 		.flatMap((match) => {
-			const demoName = match[2]!;
-			const demoCode = demos.get(demoName)!;
+			const demoName = match[2];
+			if (!demoName) {
+				return [];
+			}
+			const demoCode = demos.get(demoName);
+			if (!demoCode) {
+				throw new Error(`[${pluginName}] Demo ${JSON.stringify(`doc:${demoName}`)} not found in ${filePath}`);
+			}
 			return [
 				[demoName, demoCode],
-				...extractDemoImports(demoCode.code, demos),
+				...extractDemoImports(demoCode.code, demos, filePath),
 			];
 		}),
 );

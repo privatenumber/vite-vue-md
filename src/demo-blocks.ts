@@ -21,11 +21,11 @@ export const markdownitDemoBlocks: PluginWithParams = (
 
 		let [, demoName] = isDemo.split('=', 2);
 		if (demoName) {
-			if (demos!.has(demoName)) {
+			if (demos.has(demoName)) {
 				throw new Error(`[${pluginName}] Demo name ${JSON.stringify(demoName)} is already used in ${filePath}`);
 			}
 
-			demos!.set(demoName, {
+			demos.set(demoName, {
 				id: `${protocol}${filePath}:${demoName}`,
 				code: token.content,
 			});
@@ -36,7 +36,7 @@ export const markdownitDemoBlocks: PluginWithParams = (
 			throw new Error(`[${pluginName}] Entry (unnamed) demo must be a Vue component in ${filePath}`);
 		}
 
-		const demoId = demos!.size + 1;
+		const demoId = demos.size + 1;
 		demoName = `Demo${demoId}`;
 
 		const fileName = `${demoName}.${language}`;
