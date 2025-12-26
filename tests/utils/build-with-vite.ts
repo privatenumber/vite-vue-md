@@ -1,6 +1,7 @@
 import './happy-dom.js';
 import { setTimeout } from 'timers/promises';
 import path from 'path';
+import { pathToFileURL } from 'url';
 import fs from 'fs/promises';
 import { build } from 'vite';
 import type { DefineComponent } from 'vue';
@@ -54,7 +55,7 @@ export const buildWithVite = async (
 		files.map(async (file): Promise<[string, DefineComponent]> => {
 			const name = file.slice(0, -3);
 			const filePath = path.join(fixturePath, 'dist', `${name}.mjs`);
-			const module = await import(filePath);
+			const module = await import(pathToFileURL(filePath).toString());
 			return [name, module.default];
 		}),
 	);

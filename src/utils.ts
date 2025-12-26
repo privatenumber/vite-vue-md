@@ -4,6 +4,12 @@ export const pluginName = 'vue-md';
 
 export const protocol = 'doc:';
 
+/**
+ * Parse request ID - skips Windows drive letter colon (C:/) when finding delimiter
+ * - 'doc:Hello.vue' -> { mdFile: undefined, demoId: 'Hello.vue' }
+ * - 'doc:C:/path/file.md:Demo' -> { mdFile: 'C:/path/file.md', demoId: 'Demo' }
+ * - 'C:/path/file.md' -> { mdFile: 'C:/path/file.md', demoId: undefined }
+ */
 export const parseRequest = (
 	requestId: string,
 ) => {
@@ -13,10 +19,16 @@ export const parseRequest = (
 	let demoId: string | undefined;
 
 	if (requestSpecifier?.startsWith(protocol)) {
-		[mdFile, demoId] = requestSpecifier.slice(protocol.length).split(':', 2);
-		if (!demoId) {
-			demoId = mdFile;
+		const withoutPrefix = requestSpecifier.slice(protocol.length);
+		const searchStart = /^[A-Z]:/i.test(withoutPrefix) ? 2 : 0;
+		const colonIndex = withoutPrefix.indexOf(':', searchStart);
+
+		if (colonIndex === -1) {
+			demoId = withoutPrefix;
 			mdFile = undefined;
+		} else {
+			mdFile = withoutPrefix.slice(0, colonIndex);
+			demoId = withoutPrefix.slice(colonIndex + 1);
 		}
 	}
 
