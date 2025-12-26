@@ -88,7 +88,7 @@ import { clickHandler } from 'doc:click-handler.js'
 </script>
 
 <template>
-    <button @click="clicked">
+    <button @click="clickHandler">
         Click me
     </button>
 </template>
