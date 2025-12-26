@@ -36,5 +36,9 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: pnpm lint
 
+      - name: Type check
+        if: matrix.os == 'ubuntu-latest'
+        run: pnpm type-check
+
       - name: Test
         run: pnpm test
