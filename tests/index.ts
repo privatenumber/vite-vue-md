@@ -76,4 +76,5 @@ describe('vite-vue-md', ({ test, runTestSuite }) => {
 
 	runTestSuite(import('./specs/markdown-it.js'));
 	runTestSuite(import('./specs/demo-blocks.js'));
+	runTestSuite(import('./specs/parse-request.js'));
 });
