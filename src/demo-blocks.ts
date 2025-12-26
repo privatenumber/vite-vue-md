@@ -1,14 +1,15 @@
-import type markdownIt from 'markdown-it';
+import type MarkdownIt from 'markdown-it';
+import type { PluginWithParams } from 'markdown-it';
 import type { Demos } from './types.js';
 import { protocol, pluginName } from './utils.js';
 
-export const markdownitDemoBlocks: markdownIt.PluginWithParams = (
-	md,
+export const markdownitDemoBlocks: PluginWithParams = (
+	md: MarkdownIt,
 	filePath: string,
 	demos: Demos,
 ) => {
 	const defaultFence = md.renderer.rules.fence!;
-	md.renderer.rules.fence = function (tokens, index, mdOptions, env, self) {
+	md.renderer.rules.fence = function fenceRenderer(tokens, index, mdOptions, env, self): string {
 		const token = tokens[index]!;
 		const [language, isDemo] = token.info.trim().split(/\s+/, 2);
 

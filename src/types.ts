@@ -1,5 +1,6 @@
 import type { FilterPattern } from 'vite';
-import type markdownIt from 'markdown-it';
+import type MarkdownIt from 'markdown-it';
+import type { Options as MarkdownItOptions } from 'markdown-it';
 
 export type ImportComponents = Map<string, {
 	default?: string;
@@ -30,8 +31,8 @@ export type Options = {
 	include?: FilterPattern;
 	exclude?: FilterPattern;
 
-	markdownItOptions?: markdownIt.Options;
-	markdownItSetup?: (md: markdownIt) => void;
+	markdownItOptions?: MarkdownItOptions;
+	markdownItSetup?: (md: MarkdownIt) => void;
 
 	onDemo?: (
 		this: DemoUtils,
