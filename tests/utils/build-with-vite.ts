@@ -18,7 +18,11 @@ export const buildWithVite = async (
 	await fs.symlink(
 		path.resolve('node_modules'),
 		path.join(fixturePath, 'node_modules'),
-	);
+	).catch((error: NodeJS.ErrnoException) => {
+		if (error.code !== 'EEXIST') {
+			throw error;
+		}
+	});
 
 	await build({
 		root: fixturePath,
@@ -55,7 +59,7 @@ export const buildWithVite = async (
 		files.map(async (file): Promise<[string, DefineComponent]> => {
 			const name = file.slice(0, -3);
 			const filePath = path.join(fixturePath, 'dist', `${name}.mjs`);
-			const module = await import(pathToFileURL(filePath).toString());
+			const module = await import(pathToFileURL(filePath).href);
 			return [name, module.default];
 		}),
 	);
