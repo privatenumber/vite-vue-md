@@ -1,6 +1,6 @@
 <p align="center">
 	<!-- cwebp -q 100 .github/logo-original.png -resize 240 0 -o .github/logo.webp -->
-	<img width="120" src=".github/logo.webp">
+	<img width="150" src=".github/logo.webp">
 	<h1 align="center">vite-vue-md</h1>
 </p>
 
