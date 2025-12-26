@@ -26,8 +26,8 @@ describe('vite-vue-md', ({ test, runTestSuite }) => {
 
 		const components = await buildWithVite(fixture.path);
 		const wrapper = mount(components.doc);
-		expect(wrapper.html()).toContain('<div>No language {{ value }}</div>');
-		expect(wrapper.html()).toContain('<div>Language {{ value }}</div>');
+		expect(wrapper.html()).toContain('&lt;div&gt;No language {{ value }}&lt;/div&gt;');
+		expect(wrapper.html()).toContain('&lt;div&gt;Language {{ value }}&lt;/div&gt;');
 	});
 
 	test('wrapperClass', async () => {

@@ -186,7 +186,7 @@ export default testSuite(({ describe }) => {
 			});
 
 			const wrapper = mount(components.doc);
-			expect(wrapper.html()).toContain('<div> WRAPPER <div>Hello</div><code><template><template> <div>Hello</div> </template> </template></code></div>\n  <div>CompA</div>\n  <div>CompB</div>');
+			expect(wrapper.html()).toContain('<div> WRAPPER <div>Hello</div><code><template>&lt;template&gt; &lt;div&gt;Hello&lt;/div&gt; &lt;/template&gt; </template></code></div>\n  <div>CompA</div>\n  <div>CompB</div>');
 		});
 
 		describe('error cases', ({ test }) => {
