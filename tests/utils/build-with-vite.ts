@@ -55,7 +55,7 @@ export const buildWithVite = async (
 			const name = file.slice(0, -3);
 			const filePath = path.join(fixturePath, 'dist', `${name}.mjs`);
 			const fileUrl = path.isAbsolute(filePath)
-				? `file://${filePath.replace(/\\/g, '/')}`
+				? `file://${filePath.replaceAll('\\', '/')}`
 				: filePath;
 
 			const module = await import(fileUrl);
