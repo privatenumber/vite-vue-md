@@ -68,7 +68,7 @@
 		"@vue/test-utils": "^2.4.4",
 		"clean-pkg-json": "^1.2.0",
 		"fs-fixture": "^2.11.0",
-		"happy-dom": "^20.0.11",
+		"happy-dom": "^20.8.8",
 		"lintroll": "^1.26.0",
 		"manten": "^1.2.0",
 		"markdown-it-anchor": "^9.2.0",
