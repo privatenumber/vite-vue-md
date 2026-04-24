@@ -37,8 +37,8 @@ importers:
         specifier: ^1.26.0
         version: 1.26.0(@types/estree@1.0.8)(@typescript-eslint/utils@8.50.1(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(jsonc-eslint-parser@2.4.2)(typescript@5.9.3)
       manten:
-        specifier: ^1.2.0
-        version: 1.10.0
+        specifier: ^2.0.0
+        version: 2.0.0
       markdown-it-anchor:
         specifier: ^9.2.0
         version: 9.2.0(@types/markdown-it@14.1.2)(markdown-it@14.1.0)
@@ -1892,6 +1892,7 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   globals@14.0.0:
@@ -2253,8 +2254,9 @@ packages:
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
-  manten@1.10.0:
-    resolution: {integrity: sha512-YcapOHCdvi+Cm6qlxFBTCw/X3WfGahLCBo/OM8Ot3CK7QyT/rZtouDuVbbnkHhgX0g6ZkGMpjKPs0UsL5rWSAQ==}
+  manten@2.0.0:
+    resolution: {integrity: sha512-JjNQq4uObh4oAYvibb8j2IPzg/6Sy8ynvVVQ2rIlOKEF5eCL74bh0uu2pA/nZ36V9ihErgGZgJPE9IaeQhXW5A==}
+    engines: {node: '>=20.20.0'}
 
   markdown-it-anchor@9.2.0:
     resolution: {integrity: sha512-sa2ErMQ6kKOA4l31gLGYliFQrMKkqSO0ZJgGhDHKijPf0pNFM9vghjAh3gn26pS4JDRs7Iwa9S36gxm3vgZTzg==}
@@ -5350,7 +5352,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  manten@1.10.0:
+  manten@2.0.0:
     dependencies:
       expect: 30.2.0
 

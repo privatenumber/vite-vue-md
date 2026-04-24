@@ -70,7 +70,7 @@
 		"fs-fixture": "^2.11.0",
 		"happy-dom": "^20.0.11",
 		"lintroll": "^1.26.0",
-		"manten": "^1.2.0",
+		"manten": "^2.0.0",
 		"markdown-it-anchor": "^9.2.0",
 		"outdent": "^0.8.0",
 		"pkgroll": "^2.0.1",
