@@ -69,7 +69,7 @@
 		"clean-pkg-json": "^1.2.0",
 		"fs-fixture": "^2.11.0",
 		"happy-dom": "^20.0.11",
-		"lintroll": "^1.26.0",
+		"lintroll": "^1.30.2",
 		"manten": "^1.2.0",
 		"markdown-it-anchor": "^9.2.0",
 		"outdent": "^0.8.0",
